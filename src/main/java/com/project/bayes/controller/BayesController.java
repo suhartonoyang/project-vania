@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.bayes.bean.Request;
 import com.project.bayes.bean.Result;
+import com.project.bayes.service.BayesDiagnosaAnjingService;
+import com.project.bayes.service.BayesDiagnosaKucingService;
 import com.project.bayes.service.BayesNaiveService;
 
 @RestController
@@ -21,17 +23,27 @@ import com.project.bayes.service.BayesNaiveService;
 public class BayesController {
 
 	@Autowired
-	private BayesNaiveService bayesNaiveService;
-	
+	private BayesDiagnosaAnjingService bayesDiagnosaAnjingService;
+
+	@Autowired
+	private BayesDiagnosaKucingService bayesDiagnosaKucingService;
+
 	@GetMapping("/helloWorld")
 	public String helloWorld() {
 		return "Hello World";
 	}
-	
+
+	@PostMapping("/anjing/diagnose")
+	public ResponseEntity<?> dogDiganose(@RequestBody List<Request> requests) {
+		Result result = bayesDiagnosaAnjingService.run(requests);
+
+		return ResponseEntity.ok().body(result);
+	}
+
 	@PostMapping("/run")
-	public ResponseEntity<?> run(@RequestBody List<Request> requests){
-		Result result = bayesNaiveService.run(requests);
-		
+	public ResponseEntity<?> catDiagnose(@RequestBody List<Request> requests) {
+		Result result = bayesDiagnosaKucingService.run(requests);
+
 		return ResponseEntity.ok().body(result);
 	}
 }

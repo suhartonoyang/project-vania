@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
-import com.project.bayes.bean.MapAttributStatus;
+import com.project.bayes.bean.MapAttributResult;
 import com.project.bayes.bean.Request;
 import com.project.bayes.bean.Result;
 import com.project.bayes.bean.Attribute;
@@ -63,7 +63,7 @@ public class BayesService {
 		List<Attribute> attrs = getValueAttrs(dataSetList);
 		Map<String, Integer> mapCountResult = countResult(dataSetList);
 		Map<String, Double> mapProbResult = probResult(mapCountResult, attrs);
-		List<MapAttributStatus> mapAttributeResults = countAttrs(dataSetList, attrs, mapCountResult);
+		List<MapAttributResult> mapAttributeResults = countAttrs(dataSetList, attrs, mapCountResult);
 
 		// request to check prediction
 		Request request = new Request("weather", "sunny");
@@ -171,10 +171,10 @@ public class BayesService {
 		return probResult;
 	}
 
-	public static List<MapAttributStatus> countAttrs(List<DataSet> dataSets, List<Attribute> attrs,
+	public static List<MapAttributResult> countAttrs(List<DataSet> dataSets, List<Attribute> attrs,
 			Map<String, Integer> countResults) {
 //		Map<String, Long> map = new HashMap<String, Long>();
-		List<MapAttributStatus> list = new ArrayList<MapAttributStatus>();
+		List<MapAttributResult> list = new ArrayList<MapAttributResult>();
 		List<String> results = new ArrayList<String>();
 		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("result")).map(q -> q.getValues()).forEach(r -> {
 			results.addAll(r);
@@ -198,7 +198,7 @@ public class BayesService {
 						}
 					}).count();
 					Double probAttr = (double) countAttr / (countResult);
-					MapAttributStatus mar = new MapAttributStatus(attr.getName(), attrValue, result, countAttr, probAttr);
+					MapAttributResult mar = new MapAttributResult(attr.getName(), attrValue, result, countAttr, probAttr);
 					list.add(mar);
 				}
 			}
@@ -212,7 +212,7 @@ public class BayesService {
 		return list;
 	}
 
-	public static Result prediction(List<Request> requests, List<Attribute> attrs, List<MapAttributStatus> mapAttrs,
+	public static Result prediction(List<Request> requests, List<Attribute> attrs, List<MapAttributResult> mapAttrs,
 			Map<String, Double> probResults) {
 		List<String> resultAttrs = new ArrayList();
 
@@ -223,7 +223,7 @@ public class BayesService {
 		List<Result> results = new ArrayList();
 		for (String resultAttr : resultAttrs) {
 			double prob = probResults.get(resultAttr);
-			for (MapAttributStatus mapAttr : mapAttrs) {
+			for (MapAttributResult mapAttr : mapAttrs) {
 				if (resultAttr.equalsIgnoreCase(mapAttr.getStatus())) {
 					for (Request request : requests) {
 						if (request.getValueAttribute().equalsIgnoreCase(mapAttr.getValueAttriute())) {

@@ -1,18 +1,18 @@
 package com.project.bayes.bean;
 
-public class MapAttributStatus {
+public class MapAttributResult {
 	private String nameAttribute;
 	private String valueAttriute;
 	private String status;
 	private long count;
 	private double prob;
 
-	public MapAttributStatus() {
+	public MapAttributResult() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MapAttributStatus(String nameAttribute, String valueAttriute, String status, long count, double prob) {
+	public MapAttributResult(String nameAttribute, String valueAttriute, String status, long count, double prob) {
 		super();
 		this.nameAttribute = nameAttribute;
 		this.valueAttriute = valueAttriute;

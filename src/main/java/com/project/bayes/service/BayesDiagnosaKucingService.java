@@ -20,35 +20,37 @@ import com.project.bayes.bean.MapAttributResult;
 import com.project.bayes.bean.Request;
 import com.project.bayes.bean.Result;
 import com.project.bayes.model.DataBayes;
+import com.project.bayes.model.DiagnosaAnjing;
+import com.project.bayes.model.DiagnosaKucing;
 import com.project.bayes.bean.Attribute;
 import com.project.bayes.bean.DataSet;
 
 @Service
-public class BayesNaiveService {
+public class BayesDiagnosaKucingService {
 
 	@Autowired
-	private DataBayesService dataBayesService;
+	private DiagnosaKucingService diagnosaKucingService;
 
 	public Result run(List<Request> requests) {
 		// TODO code application logic here
 
 		// generate data from database
-		List<DataBayes> dataBayesList = generateData();
+		List<DiagnosaKucing> dataBayesList = generateData();
 
 		// process data to count total value attribute and prob
 		List<Attribute> attrs = getValueAttrs(dataBayesList);
-		Map<String, Integer> mapCountStatus = countStatus(dataBayesList);
-		Map<String, Double> mapProbResult = probStatus(mapCountStatus, attrs);
-		List<MapAttributResult> mapAttributeStatus = countAttrs(dataBayesList, attrs, mapCountStatus);
-		Result resultPrediction = prediction(requests, attrs, mapAttributeStatus, mapProbResult, mapCountStatus);
+		Map<String, Integer> mapCountResults = countResults(dataBayesList);
+		Map<String, Double> mapProbResults = probResults(mapCountResults, attrs);
+		List<MapAttributResult> mapAttributeResults = countAttrs(dataBayesList, attrs, mapCountResults);
+		Result resultPrediction = prediction(requests, attrs, mapAttributeResults, mapProbResults, mapCountResults);
 
 //		System.out.println("kesimpulan: " + resultPrediction.getName());
 
 		return resultPrediction;
 	}
 
-	private List<DataBayes> generateData() {
-		List<DataBayes> dataBayesList = dataBayesService.getDataBayesAll();
+	private List<DiagnosaKucing> generateData() {
+		List<DiagnosaKucing> dataBayesList = diagnosaKucingService.getDiagnosaKucingAll();
 
 //		dataBayesList.stream().forEach(p -> {
 //			System.out.println(p.toString());
@@ -58,9 +60,9 @@ public class BayesNaiveService {
 
 	}
 
-	private List<Attribute> getValueAttrs(List<DataBayes> dataBayesList) {
+	private List<Attribute> getValueAttrs(List<DiagnosaKucing> dataBayesList) {
 		List<Attribute> attrs = new ArrayList<Attribute>();
-		Field[] fields = DataBayes.class.getDeclaredFields();
+		Field[] fields = DiagnosaKucing.class.getDeclaredFields();
 		for (Field field : fields) {
 			List<String> valueAttrs = new ArrayList<>();
 			if (!field.getName().equalsIgnoreCase("id")) {
@@ -68,20 +70,20 @@ public class BayesNaiveService {
 					switch (field.getName()) {
 					case "jenisKelamin":
 						return p.getJenisKelamin();
-					case "jamuran":
-						return p.getJamuran();
 					case "gatalGatal":
 						return p.getGatalGatal();
-					case "rontok":
-						return p.getRontok();
-					case "garukGarukTelinga":
-						return p.getGarukGarukTelinga();
+					case "kulitKemerahan":
+						return p.getKulitKemerahan();
+					case "buluRontok":
+						return p.getBuluRontok();
+					case "kulitKering":
+						return p.getKulitKering();
+					case "bengkak":
+						return p.getBengkak();
 					case "kropeng":
 						return p.getKropeng();
-					case "nafsuMakan":
-						return p.getNafsuMakan();
-					case "status":
-						return p.getStatus();
+					case "result":
+						return p.getResult();
 					default:
 						return null;
 					}
@@ -102,11 +104,11 @@ public class BayesNaiveService {
 		return attrs;
 	}
 
-	private Map<String, Integer> countStatus(List<DataBayes> dataBayesList) {
-		List<DataBayes> temp = dataBayesList;
+	private Map<String, Integer> countResults(List<DiagnosaKucing> dataBayesList) {
+		List<DiagnosaKucing> temp = dataBayesList;
 		Map<String, Integer> map = new HashMap<String, Integer>();
-		temp.stream().map(p -> p.getStatus()).distinct().forEach(e -> {
-			int hitung = dataBayesList.stream().filter(p -> p.getStatus().equals(e.toString()))
+		temp.stream().map(p -> p.getResult()).distinct().forEach(e -> {
+			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString()))
 					.collect(Collectors.toList()).size();
 			map.put(e, hitung);
 		});
@@ -118,68 +120,69 @@ public class BayesNaiveService {
 		return map;
 	}
 
-	private Map<String, Double> probStatus(Map<String, Integer> countStatus, List<Attribute> attrs) {
-		Map<String, Double> probStatus = new HashMap<String, Double>();
-		List<String> statuses = new ArrayList<String>();
-		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("status")).map(q -> q.getValues()).forEach(r -> {
-			statuses.addAll(r);
+	private Map<String, Double> probResults(Map<String, Integer> countResults, List<Attribute> attrs) {
+		Map<String, Double> probResults = new HashMap<String, Double>();
+		List<String> results = new ArrayList<String>();
+		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("result")).map(q -> q.getValues()).forEach(r -> {
+			results.addAll(r);
 		});
 
-		for (String status : statuses) {
-			int sumAll = countStatus.values().stream().mapToInt(Integer::intValue).sum();
-			int value = countStatus.get(status);
+		for (String result : results) {
+			int sumAll = countResults.values().stream().mapToInt(Integer::intValue).sum();
+			int value = countResults.get(result);
 			double prob = (double) value / sumAll;
-			probStatus.put(status, prob);
+			probResults.put(result, prob);
 		}
 
 //		probStatus.entrySet().stream().forEach(p -> {
 //			System.out.println(p.getKey() + " : " + p.getValue());
 //		});
 
-		return probStatus;
+		return probResults;
 	}
 
-	public static List<MapAttributResult> countAttrs(List<DataBayes> dataBayesList, List<Attribute> attrs,
-			Map<String, Integer> countStatus) {
+	public static List<MapAttributResult> countAttrs(List<DiagnosaKucing> dataBayesList, List<Attribute> attrs,
+			Map<String, Integer> countResults) {
 		List<MapAttributResult> list = new ArrayList<MapAttributResult>();
-		List<String> statuses = new ArrayList<String>();
-		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("status")).map(q -> q.getValues()).forEach(r -> {
-			statuses.addAll(r);
+		List<String> results = new ArrayList<String>();
+		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("result")).map(q -> q.getValues()).forEach(r -> {
+			results.addAll(r);
 		});
 
-		List<Attribute> filterAttr = attrs.stream().filter(p -> !p.getName().equalsIgnoreCase("status"))
+		List<Attribute> filterAttr = attrs.stream().filter(p -> !p.getName().equalsIgnoreCase("result"))
 				.collect(Collectors.toList());
 
 		for (Attribute attr : filterAttr) {
-			for (String status : statuses) {
-				int countResult = countStatus.get(status);
+			for (String result : results) {
+				int countResult = countResults.get(result);
 				for (String attrValue : attr.getValues()) {
 					long countAttr = dataBayesList.stream().filter(p -> {
 						switch (attr.getName()) {
 						case "jenisKelamin":
-							return p.getStatus().equalsIgnoreCase(status)
+							return p.getResult().equalsIgnoreCase(result)
 									&& p.getJenisKelamin().equalsIgnoreCase(attrValue);
-						case "jamuran":
-							return p.getStatus().equalsIgnoreCase(status) && p.getJamuran().equalsIgnoreCase(attrValue);
 						case "gatalGatal":
-							return p.getStatus().equalsIgnoreCase(status)
+							return p.getResult().equalsIgnoreCase(result)
 									&& p.getGatalGatal().equalsIgnoreCase(attrValue);
-						case "rontok":
-							return p.getStatus().equalsIgnoreCase(status) && p.getRontok().equalsIgnoreCase(attrValue);
-						case "garukGarukTelinga":
-							return p.getStatus().equalsIgnoreCase(status)
-									&& p.getGarukGarukTelinga().equalsIgnoreCase(attrValue);
+						case "kulitKemerahan":
+							return p.getResult().equalsIgnoreCase(result)
+									&& p.getKulitKemerahan().equalsIgnoreCase(attrValue);
+						case "buluRontok":
+							return p.getResult().equalsIgnoreCase(result)
+									&& p.getBuluRontok().equalsIgnoreCase(attrValue);
+						case "kulitKering":
+							return p.getResult().equalsIgnoreCase(result)
+									&& p.getKulitKering().equalsIgnoreCase(attrValue);
+						case "bengkak":
+							return p.getResult().equalsIgnoreCase(result) && p.getBengkak().equalsIgnoreCase(attrValue);
 						case "kropeng":
-							return p.getStatus().equalsIgnoreCase(status) && p.getKropeng().equalsIgnoreCase(attrValue);
-						case "nafsuMakan":
-							return p.getStatus().equalsIgnoreCase(status)
-									&& p.getNafsuMakan().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getKropeng().equalsIgnoreCase(attrValue);
 						default:
 							return false;
 						}
 					}).count();
 					Double probAttr = (double) countAttr / (countResult);
-					MapAttributResult mar = new MapAttributResult(attr.getName(), attrValue, status, countAttr,
+					MapAttributResult mar = new MapAttributResult(attr.getName(), attrValue, result, countAttr,
 							probAttr);
 					list.add(mar);
 				}
@@ -195,27 +198,27 @@ public class BayesNaiveService {
 	}
 
 	public Result prediction(List<Request> requests, List<Attribute> attrs, List<MapAttributResult> mapAttrs,
-			Map<String, Double> probStatus, Map<String, Integer> countStatus) {
-		List<String> statusAttrs = new ArrayList();
+			Map<String, Double> probResults, Map<String, Integer> countResults) {
+		List<String> resultAttrs = new ArrayList();
 
-		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("status")).map(m -> m.getValues()).forEach(q -> {
-			statusAttrs.addAll(q);
+		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("result")).map(m -> m.getValues()).forEach(q -> {
+			resultAttrs.addAll(q);
 		});
 
 		List<Result> results = new ArrayList();
-		for (String statusAttr : statusAttrs) {
-			double prob = probStatus.get(statusAttr);
-//			System.out.println("prob " + statusAttr + ": " + prob);
+		for (String resultAttr : resultAttrs) {
+			double prob = probResults.get(resultAttr);
+//			System.out.println("prob " + resultAttr + ": " + prob);
 			for (MapAttributResult mapAttr : mapAttrs) {
-				if (statusAttr.equalsIgnoreCase(mapAttr.getStatus())) {
+				if (resultAttr.equalsIgnoreCase(mapAttr.getStatus())) {
 					for (Request request : requests) {
 						if (request.getNameAttribute().equalsIgnoreCase(mapAttr.getNameAttribute())) {
 							if (request.getValueAttribute().equalsIgnoreCase(mapAttr.getValueAttriute())) {
-								boolean checkZero = requests.stream().filter(p->{
-									return mapAttrs.stream().filter(q->{
-										return  p.getNameAttribute().equalsIgnoreCase(q.getNameAttribute())
+								boolean checkZero = requests.stream().filter(p -> {
+									return mapAttrs.stream().filter(q -> {
+										return p.getNameAttribute().equalsIgnoreCase(q.getNameAttribute())
 												&& p.getValueAttribute().equalsIgnoreCase(q.getValueAttriute())
-												&& q.getCount()==0 && q.getStatus().equalsIgnoreCase(statusAttr);
+												&& q.getCount() == 0 && q.getStatus().equalsIgnoreCase(resultAttr);
 									}).findAny().isPresent();
 								}).findAny().isPresent();
 //								System.out.println("checkZero: " + checkZero);
@@ -223,7 +226,7 @@ public class BayesNaiveService {
 //									System.out.println("mapAttr: " + mapAttr.toString());
 									long countAttr = mapAttr.getCount();
 									++countAttr;
-									int sumCountStatus = countStatus.values().stream().mapToInt(Integer::intValue)
+									int sumCountStatus = countResults.values().stream().mapToInt(Integer::intValue)
 											.sum();
 									double newProb = (double) countAttr / sumCountStatus;
 									prob *= newProb;
@@ -236,17 +239,17 @@ public class BayesNaiveService {
 					}
 				}
 			}
-			Result result = new Result(statusAttr, prob);
+			Result result = new Result(resultAttr, prob);
 			results.add(result);
 		}
 
-		mapAttrs.stream().forEach(p -> {
-			System.out.println(p.toString());
-		});
+//		mapAttrs.stream().forEach(p -> {
+//			System.out.println(p.toString());
+//		});
 
-		results.stream().forEach(p -> {
-			System.out.println(p.getName() + ": " + p.getValue());
-		});
+//		results.stream().forEach(p -> {
+//			System.out.println(p.getName() + ": " + p.getValue());
+//		});
 
 		Result max = results.stream().max(Comparator.comparing(Result::getValue)).orElse(null);
 
