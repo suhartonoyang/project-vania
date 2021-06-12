@@ -1,6 +1,6 @@
 // Generated with g9.
 
-package com.project.bayes.model;
+package com.project.bayes.vania.model;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -13,8 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-@Entity(name = "diagnosa_kucing")
-public class DiagnosaKucing implements Serializable {
+@Entity(name = "diagnosa_anjing")
+public class DiagnosaAnjing implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,21 +24,23 @@ public class DiagnosaKucing implements Serializable {
 	private String jenisKelamin;
 	@Column(name = "gatal_gatal", length = 255)
 	private String gatalGatal;
-	@Column(name = "kulit_kemerahan", length = 255)
-	private String kulitKemerahan;
+	@Column(name = "mengigit_gigit", length = 255)
+	private String mengigitGigit;
+	@Column(name = "menjilat_kaki", length = 255)
+	private String menjilatKaki;
 	@Column(name = "bulu_rontok", length = 255)
 	private String buluRontok;
-	@Column(name = "kulit_kering", length = 255)
-	private String kulitKering;
+	@Column(name = "nafsu_makan", length = 255)
+	private String nafsuMakan;
 	@Column(length = 255)
-	private String bengkak;
+	private String jamuran;
 	@Column(length = 255)
 	private String kropeng;
 	@Column(length = 255)
 	private String result;
 
 	/** Default constructor. */
-	public DiagnosaKucing() {
+	public DiagnosaAnjing() {
 		super();
 	}
 
@@ -97,21 +99,39 @@ public class DiagnosaKucing implements Serializable {
 	}
 
 	/**
-	 * Access method for kulitKemerahan.
+	 * Access method for mengigitGigit.
 	 *
-	 * @return the current value of kulitKemerahan
+	 * @return the current value of mengigitGigit
 	 */
-	public String getKulitKemerahan() {
-		return kulitKemerahan;
+	public String getMengigitGigit() {
+		return mengigitGigit;
 	}
 
 	/**
-	 * Setter method for kulitKemerahan.
+	 * Setter method for mengigitGigit.
 	 *
-	 * @param aKulitKemerahan the new value for kulitKemerahan
+	 * @param aMengigitGigit the new value for mengigitGigit
 	 */
-	public void setKulitKemerahan(String aKulitKemerahan) {
-		kulitKemerahan = aKulitKemerahan;
+	public void setMengigitGigit(String aMengigitGigit) {
+		mengigitGigit = aMengigitGigit;
+	}
+
+	/**
+	 * Access method for menjilatKaki.
+	 *
+	 * @return the current value of menjilatKaki
+	 */
+	public String getMenjilatKaki() {
+		return menjilatKaki;
+	}
+
+	/**
+	 * Setter method for menjilatKaki.
+	 *
+	 * @param aMenjilatKaki the new value for menjilatKaki
+	 */
+	public void setMenjilatKaki(String aMenjilatKaki) {
+		menjilatKaki = aMenjilatKaki;
 	}
 
 	/**
@@ -133,39 +153,39 @@ public class DiagnosaKucing implements Serializable {
 	}
 
 	/**
-	 * Access method for kulitKering.
+	 * Access method for nafsuMakan.
 	 *
-	 * @return the current value of kulitKering
+	 * @return the current value of nafsuMakan
 	 */
-	public String getKulitKering() {
-		return kulitKering;
+	public String getNafsuMakan() {
+		return nafsuMakan;
 	}
 
 	/**
-	 * Setter method for kulitKering.
+	 * Setter method for nafsuMakan.
 	 *
-	 * @param aKulitKering the new value for kulitKering
+	 * @param aNafsuMakan the new value for nafsuMakan
 	 */
-	public void setKulitKering(String aKulitKering) {
-		kulitKering = aKulitKering;
+	public void setNafsuMakan(String aNafsuMakan) {
+		nafsuMakan = aNafsuMakan;
 	}
 
 	/**
-	 * Access method for bengkak.
+	 * Access method for jamuran.
 	 *
-	 * @return the current value of bengkak
+	 * @return the current value of jamuran
 	 */
-	public String getBengkak() {
-		return bengkak;
+	public String getJamuran() {
+		return jamuran;
 	}
 
 	/**
-	 * Setter method for bengkak.
+	 * Setter method for jamuran.
 	 *
-	 * @param aBengkak the new value for bengkak
+	 * @param aJamuran the new value for jamuran
 	 */
-	public void setBengkak(String aBengkak) {
-		bengkak = aBengkak;
+	public void setJamuran(String aJamuran) {
+		jamuran = aJamuran;
 	}
 
 	/**
@@ -200,25 +220,25 @@ public class DiagnosaKucing implements Serializable {
 	 *
 	 * @param aHasil the new value for hasil
 	 */
-	public void setResult(String aResult) {
+	public void setHasil(String aResult) {
 		result = aResult;
 	}
 
 	/**
-	 * Compares the key for this instance with another DiagnosaKucing.
+	 * Compares the key for this instance with another DiagnosaAnjing.
 	 *
 	 * @param other The object to compare to
-	 * @return True if other object is instance of class DiagnosaKucing and the key
+	 * @return True if other object is instance of class DiagnosaAnjing and the key
 	 *         objects are equal
 	 */
 	private boolean equalKeys(Object other) {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof DiagnosaKucing)) {
+		if (!(other instanceof DiagnosaAnjing)) {
 			return false;
 		}
-		DiagnosaKucing that = (DiagnosaKucing) other;
+		DiagnosaAnjing that = (DiagnosaAnjing) other;
 		if (this.getId() != that.getId()) {
 			return false;
 		}
@@ -226,16 +246,16 @@ public class DiagnosaKucing implements Serializable {
 	}
 
 	/**
-	 * Compares this instance with another DiagnosaKucing.
+	 * Compares this instance with another DiagnosaAnjing.
 	 *
 	 * @param other The object to compare to
 	 * @return True if the objects are the same
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (!(other instanceof DiagnosaKucing))
+		if (!(other instanceof DiagnosaAnjing))
 			return false;
-		return this.equalKeys(other) && ((DiagnosaKucing) other).equalKeys(this);
+		return this.equalKeys(other) && ((DiagnosaAnjing) other).equalKeys(this);
 	}
 
 	/**
@@ -254,9 +274,10 @@ public class DiagnosaKucing implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DiagnosaKucing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
-				+ ", kulitKemerahan=" + kulitKemerahan + ", buluRontok=" + buluRontok + ", kulitKering=" + kulitKering
-				+ ", bengkak=" + bengkak + ", kropeng=" + kropeng + ", result=" + result + "]";
+		return "DiagnosaAnjing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
+				+ ", mengigitGigit=" + mengigitGigit + ", menjilatKaki=" + menjilatKaki + ", buluRontok=" + buluRontok
+				+ ", nafsuMakan=" + nafsuMakan + ", jamuran=" + jamuran + ", kropeng=" + kropeng + ", result=" + result
+				+ "]";
 	}
 
 }

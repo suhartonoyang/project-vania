@@ -1,6 +1,6 @@
 // Generated with g9.
 
-package com.project.bayes.model;
+package com.project.bayes.vania.model;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

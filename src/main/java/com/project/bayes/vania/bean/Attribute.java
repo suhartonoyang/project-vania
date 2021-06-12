@@ -1,4 +1,4 @@
-package com.project.bayes.bean;
+package com.project.bayes.vania.bean;
 
 import java.util.List;
 

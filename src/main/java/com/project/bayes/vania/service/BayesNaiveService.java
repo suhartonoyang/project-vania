@@ -1,4 +1,4 @@
-package com.project.bayes.service;
+package com.project.bayes.vania.service;
 
 import java.beans.Introspector;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
-import com.project.bayes.bean.MapAttributResult;
-import com.project.bayes.bean.Request;
-import com.project.bayes.bean.Result;
-import com.project.bayes.model.DataBayes;
-import com.project.bayes.bean.Attribute;
-import com.project.bayes.bean.DataSet;
+import com.project.bayes.vania.bean.Attribute;
+import com.project.bayes.vania.bean.DataSet;
+import com.project.bayes.vania.bean.MapAttributResult;
+import com.project.bayes.vania.bean.Request;
+import com.project.bayes.vania.bean.Result;
+import com.project.bayes.vania.model.DataBayes;
 
 @Service
 public class BayesNaiveService {

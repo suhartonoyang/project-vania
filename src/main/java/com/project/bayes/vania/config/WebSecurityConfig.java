@@ -1,4 +1,4 @@
-package com.project.bayes.config;
+package com.project.bayes.vania.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

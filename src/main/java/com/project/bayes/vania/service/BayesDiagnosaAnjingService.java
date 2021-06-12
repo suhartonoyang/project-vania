@@ -1,4 +1,4 @@
-package com.project.bayes.service;
+package com.project.bayes.vania.service;
 
 import java.beans.Introspector;
 import java.io.IOException;
@@ -16,26 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
-import com.project.bayes.bean.MapAttributResult;
-import com.project.bayes.bean.Request;
-import com.project.bayes.bean.Result;
-import com.project.bayes.model.DataBayes;
-import com.project.bayes.model.DiagnosaAnjing;
-import com.project.bayes.model.DiagnosaKucing;
-import com.project.bayes.bean.Attribute;
-import com.project.bayes.bean.DataSet;
+import com.project.bayes.vania.bean.Attribute;
+import com.project.bayes.vania.bean.DataSet;
+import com.project.bayes.vania.bean.MapAttributResult;
+import com.project.bayes.vania.bean.Request;
+import com.project.bayes.vania.bean.Result;
+import com.project.bayes.vania.model.DataBayes;
+import com.project.bayes.vania.model.DiagnosaAnjing;
 
 @Service
-public class BayesDiagnosaKucingService {
+public class BayesDiagnosaAnjingService {
 
 	@Autowired
-	private DiagnosaKucingService diagnosaKucingService;
+	private DiagnosaAnjingService diagnosaAnjingService;
 
 	public Result run(List<Request> requests) {
 		// TODO code application logic here
 
 		// generate data from database
-		List<DiagnosaKucing> dataBayesList = generateData();
+		List<DiagnosaAnjing> dataBayesList = generateData();
 
 		// process data to count total value attribute and prob
 		List<Attribute> attrs = getValueAttrs(dataBayesList);
@@ -49,8 +48,8 @@ public class BayesDiagnosaKucingService {
 		return resultPrediction;
 	}
 
-	private List<DiagnosaKucing> generateData() {
-		List<DiagnosaKucing> dataBayesList = diagnosaKucingService.getDiagnosaKucingAll();
+	private List<DiagnosaAnjing> generateData() {
+		List<DiagnosaAnjing> dataBayesList = diagnosaAnjingService.getDataDiagnosaAnjingAll();
 
 //		dataBayesList.stream().forEach(p -> {
 //			System.out.println(p.toString());
@@ -60,9 +59,9 @@ public class BayesDiagnosaKucingService {
 
 	}
 
-	private List<Attribute> getValueAttrs(List<DiagnosaKucing> dataBayesList) {
+	private List<Attribute> getValueAttrs(List<DiagnosaAnjing> dataBayesList) {
 		List<Attribute> attrs = new ArrayList<Attribute>();
-		Field[] fields = DiagnosaKucing.class.getDeclaredFields();
+		Field[] fields = DiagnosaAnjing.class.getDeclaredFields();
 		for (Field field : fields) {
 			List<String> valueAttrs = new ArrayList<>();
 			if (!field.getName().equalsIgnoreCase("id")) {
@@ -72,14 +71,16 @@ public class BayesDiagnosaKucingService {
 						return p.getJenisKelamin();
 					case "gatalGatal":
 						return p.getGatalGatal();
-					case "kulitKemerahan":
-						return p.getKulitKemerahan();
+					case "mengigitGigit":
+						return p.getMengigitGigit();
+					case "menjilatKaki":
+						return p.getMenjilatKaki();
 					case "buluRontok":
 						return p.getBuluRontok();
-					case "kulitKering":
-						return p.getKulitKering();
-					case "bengkak":
-						return p.getBengkak();
+					case "nafsuMakan":
+						return p.getNafsuMakan();
+					case "jamuran":
+						return p.getJamuran();
 					case "kropeng":
 						return p.getKropeng();
 					case "result":
@@ -104,8 +105,8 @@ public class BayesDiagnosaKucingService {
 		return attrs;
 	}
 
-	private Map<String, Integer> countResults(List<DiagnosaKucing> dataBayesList) {
-		List<DiagnosaKucing> temp = dataBayesList;
+	private Map<String, Integer> countResults(List<DiagnosaAnjing> dataBayesList) {
+		List<DiagnosaAnjing> temp = dataBayesList;
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		temp.stream().map(p -> p.getResult()).distinct().forEach(e -> {
 			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString()))
@@ -141,7 +142,7 @@ public class BayesDiagnosaKucingService {
 		return probResults;
 	}
 
-	public static List<MapAttributResult> countAttrs(List<DiagnosaKucing> dataBayesList, List<Attribute> attrs,
+	public static List<MapAttributResult> countAttrs(List<DiagnosaAnjing> dataBayesList, List<Attribute> attrs,
 			Map<String, Integer> countResults) {
 		List<MapAttributResult> list = new ArrayList<MapAttributResult>();
 		List<String> results = new ArrayList<String>();
@@ -164,17 +165,20 @@ public class BayesDiagnosaKucingService {
 						case "gatalGatal":
 							return p.getResult().equalsIgnoreCase(result)
 									&& p.getGatalGatal().equalsIgnoreCase(attrValue);
-						case "kulitKemerahan":
+						case "mengigitGigit":
 							return p.getResult().equalsIgnoreCase(result)
-									&& p.getKulitKemerahan().equalsIgnoreCase(attrValue);
+									&& p.getMengigitGigit().equalsIgnoreCase(attrValue);
+						case "menjilatKaki":
+							return p.getResult().equalsIgnoreCase(result)
+									&& p.getMenjilatKaki().equalsIgnoreCase(attrValue);
 						case "buluRontok":
 							return p.getResult().equalsIgnoreCase(result)
 									&& p.getBuluRontok().equalsIgnoreCase(attrValue);
-						case "kulitKering":
+						case "nafsuMakan":
 							return p.getResult().equalsIgnoreCase(result)
-									&& p.getKulitKering().equalsIgnoreCase(attrValue);
-						case "bengkak":
-							return p.getResult().equalsIgnoreCase(result) && p.getBengkak().equalsIgnoreCase(attrValue);
+									&& p.getNafsuMakan().equalsIgnoreCase(attrValue);
+						case "jamuran":
+							return p.getResult().equalsIgnoreCase(result) && p.getJamuran().equalsIgnoreCase(attrValue);
 						case "kropeng":
 							return p.getResult().equalsIgnoreCase(result) && p.getKropeng().equalsIgnoreCase(attrValue);
 						default:
