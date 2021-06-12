@@ -22,19 +22,23 @@ import com.project.bayes.vania.bean.MapAttributResult;
 import com.project.bayes.vania.bean.Request;
 import com.project.bayes.vania.bean.Result;
 import com.project.bayes.vania.model.DataBayes;
-import com.project.bayes.vania.model.DiagnosaAnjing;
+import com.project.bayes.vania.model.DataLatihAnjing;
+import com.project.bayes.vania.model.DataTestingAnjing;
 
 @Service
 public class BayesDiagnosaAnjingService {
 
 	@Autowired
-	private DiagnosaAnjingService diagnosaAnjingService;
+	private DataLatihAnjingService dataLatihAnjingService;
 
-	public Result run(List<Request> requests) {
+	@Autowired
+	private DataTestingAnjingService dataTestingAnjingService;
+
+	public DataTestingAnjing run(List<Request> requests) {
 		// TODO code application logic here
 
 		// generate data from database
-		List<DiagnosaAnjing> dataBayesList = generateData();
+		List<DataLatihAnjing> dataBayesList = generateData();
 
 		// process data to count total value attribute and prob
 		List<Attribute> attrs = getValueAttrs(dataBayesList);
@@ -43,13 +47,38 @@ public class BayesDiagnosaAnjingService {
 		List<MapAttributResult> mapAttributeResults = countAttrs(dataBayesList, attrs, mapCountResults);
 		Result resultPrediction = prediction(requests, attrs, mapAttributeResults, mapProbResults, mapCountResults);
 
+		DataTestingAnjing newData = new DataTestingAnjing();
+		requests.stream().forEach(p -> {
+			switch (p.getNameAttribute()) {
+			case "jenisKelamin":
+				newData.setJenisKelamin(p.getValueAttribute());
+			case "gatalGatal":
+				newData.setGatalGatal(p.getValueAttribute());
+			case "mengigitGigit":
+				newData.setMengigitGigit(p.getValueAttribute());
+			case "menjilatKaki":
+				newData.setMenjilatKaki(p.getValueAttribute());
+			case "buluRontok":
+				newData.setBuluRontok(p.getValueAttribute());
+			case "nafsuMakan":
+				newData.setNafsuMakan(p.getValueAttribute());
+			case "jamuran":
+				newData.setJamuran(p.getValueAttribute());
+			case "kropeng":
+				newData.setKropeng(p.getValueAttribute());
+			}
+		});
+
+		newData.setResult(resultPrediction.getName());
+		dataTestingAnjingService.saveData(newData);
+
 //		System.out.println("kesimpulan: " + resultPrediction.getName());
 
-		return resultPrediction;
+		return newData;
 	}
 
-	private List<DiagnosaAnjing> generateData() {
-		List<DiagnosaAnjing> dataBayesList = diagnosaAnjingService.getDataDiagnosaAnjingAll();
+	private List<DataLatihAnjing> generateData() {
+		List<DataLatihAnjing> dataBayesList = dataLatihAnjingService.getDataLatihAnjingAll();
 
 //		dataBayesList.stream().forEach(p -> {
 //			System.out.println(p.toString());
@@ -59,9 +88,9 @@ public class BayesDiagnosaAnjingService {
 
 	}
 
-	private List<Attribute> getValueAttrs(List<DiagnosaAnjing> dataBayesList) {
+	private List<Attribute> getValueAttrs(List<DataLatihAnjing> dataBayesList) {
 		List<Attribute> attrs = new ArrayList<Attribute>();
-		Field[] fields = DiagnosaAnjing.class.getDeclaredFields();
+		Field[] fields = DataLatihAnjing.class.getDeclaredFields();
 		for (Field field : fields) {
 			List<String> valueAttrs = new ArrayList<>();
 			if (!field.getName().equalsIgnoreCase("id")) {
@@ -105,8 +134,8 @@ public class BayesDiagnosaAnjingService {
 		return attrs;
 	}
 
-	private Map<String, Integer> countResults(List<DiagnosaAnjing> dataBayesList) {
-		List<DiagnosaAnjing> temp = dataBayesList;
+	private Map<String, Integer> countResults(List<DataLatihAnjing> dataBayesList) {
+		List<DataLatihAnjing> temp = dataBayesList;
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		temp.stream().map(p -> p.getResult()).distinct().forEach(e -> {
 			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString()))
@@ -142,7 +171,7 @@ public class BayesDiagnosaAnjingService {
 		return probResults;
 	}
 
-	public static List<MapAttributResult> countAttrs(List<DiagnosaAnjing> dataBayesList, List<Attribute> attrs,
+	public static List<MapAttributResult> countAttrs(List<DataLatihAnjing> dataBayesList, List<Attribute> attrs,
 			Map<String, Integer> countResults) {
 		List<MapAttributResult> list = new ArrayList<MapAttributResult>();
 		List<String> results = new ArrayList<String>();

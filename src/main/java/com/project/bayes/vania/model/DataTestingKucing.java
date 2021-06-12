@@ -13,8 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-@Entity(name = "diagnosa_anjing")
-public class DiagnosaAnjing implements Serializable {
+@Entity(name = "data_testing_kucing")
+public class DataTestingKucing implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,23 +24,21 @@ public class DiagnosaAnjing implements Serializable {
 	private String jenisKelamin;
 	@Column(name = "gatal_gatal", length = 255)
 	private String gatalGatal;
-	@Column(name = "mengigit_gigit", length = 255)
-	private String mengigitGigit;
-	@Column(name = "menjilat_kaki", length = 255)
-	private String menjilatKaki;
+	@Column(name = "kulit_kemerahan", length = 255)
+	private String kulitKemerahan;
 	@Column(name = "bulu_rontok", length = 255)
 	private String buluRontok;
-	@Column(name = "nafsu_makan", length = 255)
-	private String nafsuMakan;
+	@Column(name = "kulit_kering", length = 255)
+	private String kulitKering;
 	@Column(length = 255)
-	private String jamuran;
+	private String bengkak;
 	@Column(length = 255)
 	private String kropeng;
 	@Column(length = 255)
 	private String result;
 
 	/** Default constructor. */
-	public DiagnosaAnjing() {
+	public DataTestingKucing() {
 		super();
 	}
 
@@ -99,39 +97,21 @@ public class DiagnosaAnjing implements Serializable {
 	}
 
 	/**
-	 * Access method for mengigitGigit.
+	 * Access method for kulitKemerahan.
 	 *
-	 * @return the current value of mengigitGigit
+	 * @return the current value of kulitKemerahan
 	 */
-	public String getMengigitGigit() {
-		return mengigitGigit;
+	public String getKulitKemerahan() {
+		return kulitKemerahan;
 	}
 
 	/**
-	 * Setter method for mengigitGigit.
+	 * Setter method for kulitKemerahan.
 	 *
-	 * @param aMengigitGigit the new value for mengigitGigit
+	 * @param aKulitKemerahan the new value for kulitKemerahan
 	 */
-	public void setMengigitGigit(String aMengigitGigit) {
-		mengigitGigit = aMengigitGigit;
-	}
-
-	/**
-	 * Access method for menjilatKaki.
-	 *
-	 * @return the current value of menjilatKaki
-	 */
-	public String getMenjilatKaki() {
-		return menjilatKaki;
-	}
-
-	/**
-	 * Setter method for menjilatKaki.
-	 *
-	 * @param aMenjilatKaki the new value for menjilatKaki
-	 */
-	public void setMenjilatKaki(String aMenjilatKaki) {
-		menjilatKaki = aMenjilatKaki;
+	public void setKulitKemerahan(String aKulitKemerahan) {
+		kulitKemerahan = aKulitKemerahan;
 	}
 
 	/**
@@ -153,39 +133,39 @@ public class DiagnosaAnjing implements Serializable {
 	}
 
 	/**
-	 * Access method for nafsuMakan.
+	 * Access method for kulitKering.
 	 *
-	 * @return the current value of nafsuMakan
+	 * @return the current value of kulitKering
 	 */
-	public String getNafsuMakan() {
-		return nafsuMakan;
+	public String getKulitKering() {
+		return kulitKering;
 	}
 
 	/**
-	 * Setter method for nafsuMakan.
+	 * Setter method for kulitKering.
 	 *
-	 * @param aNafsuMakan the new value for nafsuMakan
+	 * @param aKulitKering the new value for kulitKering
 	 */
-	public void setNafsuMakan(String aNafsuMakan) {
-		nafsuMakan = aNafsuMakan;
+	public void setKulitKering(String aKulitKering) {
+		kulitKering = aKulitKering;
 	}
 
 	/**
-	 * Access method for jamuran.
+	 * Access method for bengkak.
 	 *
-	 * @return the current value of jamuran
+	 * @return the current value of bengkak
 	 */
-	public String getJamuran() {
-		return jamuran;
+	public String getBengkak() {
+		return bengkak;
 	}
 
 	/**
-	 * Setter method for jamuran.
+	 * Setter method for bengkak.
 	 *
-	 * @param aJamuran the new value for jamuran
+	 * @param aBengkak the new value for bengkak
 	 */
-	public void setJamuran(String aJamuran) {
-		jamuran = aJamuran;
+	public void setBengkak(String aBengkak) {
+		bengkak = aBengkak;
 	}
 
 	/**
@@ -207,38 +187,38 @@ public class DiagnosaAnjing implements Serializable {
 	}
 
 	/**
-	 * Access method for hasil.
+	 * Access method for result.
 	 *
-	 * @return the current value of hasil
+	 * @return the current value of result
 	 */
 	public String getResult() {
 		return result;
 	}
 
 	/**
-	 * Setter method for hasil.
+	 * Setter method for result.
 	 *
-	 * @param aHasil the new value for hasil
+	 * @param aResult the new value for result
 	 */
-	public void setHasil(String aResult) {
+	public void setResult(String aResult) {
 		result = aResult;
 	}
 
 	/**
-	 * Compares the key for this instance with another DiagnosaAnjing.
+	 * Compares the key for this instance with another DataTestingKucing.
 	 *
 	 * @param other The object to compare to
-	 * @return True if other object is instance of class DiagnosaAnjing and the key
-	 *         objects are equal
+	 * @return True if other object is instance of class DataTestingKucing and the
+	 *         key objects are equal
 	 */
 	private boolean equalKeys(Object other) {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof DiagnosaAnjing)) {
+		if (!(other instanceof DataTestingKucing)) {
 			return false;
 		}
-		DiagnosaAnjing that = (DiagnosaAnjing) other;
+		DataTestingKucing that = (DataTestingKucing) other;
 		if (this.getId() != that.getId()) {
 			return false;
 		}
@@ -246,16 +226,16 @@ public class DiagnosaAnjing implements Serializable {
 	}
 
 	/**
-	 * Compares this instance with another DiagnosaAnjing.
+	 * Compares this instance with another DataTestingKucing.
 	 *
 	 * @param other The object to compare to
 	 * @return True if the objects are the same
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (!(other instanceof DiagnosaAnjing))
+		if (!(other instanceof DataTestingKucing))
 			return false;
-		return this.equalKeys(other) && ((DiagnosaAnjing) other).equalKeys(this);
+		return this.equalKeys(other) && ((DataTestingKucing) other).equalKeys(this);
 	}
 
 	/**
@@ -274,10 +254,9 @@ public class DiagnosaAnjing implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DiagnosaAnjing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
-				+ ", mengigitGigit=" + mengigitGigit + ", menjilatKaki=" + menjilatKaki + ", buluRontok=" + buluRontok
-				+ ", nafsuMakan=" + nafsuMakan + ", jamuran=" + jamuran + ", kropeng=" + kropeng + ", result=" + result
-				+ "]";
+		return "DataTestingKucing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
+				+ ", kulitKemerahan=" + kulitKemerahan + ", buluRontok=" + buluRontok + ", kulitKering=" + kulitKering
+				+ ", bengkak=" + bengkak + ", kropeng=" + kropeng + ", result=" + result + "]";
 	}
 
 }

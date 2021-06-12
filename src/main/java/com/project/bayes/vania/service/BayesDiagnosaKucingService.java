@@ -22,20 +22,25 @@ import com.project.bayes.vania.bean.MapAttributResult;
 import com.project.bayes.vania.bean.Request;
 import com.project.bayes.vania.bean.Result;
 import com.project.bayes.vania.model.DataBayes;
-import com.project.bayes.vania.model.DiagnosaAnjing;
-import com.project.bayes.vania.model.DiagnosaKucing;
+import com.project.bayes.vania.model.DataLatihAnjing;
+import com.project.bayes.vania.model.DataLatihKucing;
+import com.project.bayes.vania.model.DataTestingAnjing;
+import com.project.bayes.vania.model.DataTestingKucing;
 
 @Service
 public class BayesDiagnosaKucingService {
 
 	@Autowired
-	private DiagnosaKucingService diagnosaKucingService;
+	private DataLatihKucingService dataLatihKucingService;
 
-	public Result run(List<Request> requests) {
+	@Autowired
+	private DataTestingKucingService dataTestingKucingService;
+
+	public DataTestingKucing run(List<Request> requests) {
 		// TODO code application logic here
 
 		// generate data from database
-		List<DiagnosaKucing> dataBayesList = generateData();
+		List<DataLatihKucing> dataBayesList = generateData();
 
 		// process data to count total value attribute and prob
 		List<Attribute> attrs = getValueAttrs(dataBayesList);
@@ -46,11 +51,34 @@ public class BayesDiagnosaKucingService {
 
 //		System.out.println("kesimpulan: " + resultPrediction.getName());
 
-		return resultPrediction;
+		DataTestingKucing newData = new DataTestingKucing();
+		requests.stream().forEach(p -> {
+			switch (p.getNameAttribute()) {
+			case "jenisKelamin":
+				newData.setJenisKelamin(p.getValueAttribute());
+			case "gatalGatal":
+				newData.setGatalGatal(p.getValueAttribute());
+			case "kulitKemerahan":
+				newData.setKulitKemerahan(p.getValueAttribute());
+			case "buluRontok":
+				newData.setBuluRontok(p.getValueAttribute());
+			case "kulitKering":
+				newData.setKulitKering(p.getValueAttribute());
+			case "bengkak":
+				newData.setBengkak(p.getValueAttribute());
+			case "kropeng":
+				newData.setKropeng(p.getValueAttribute());
+			}
+		});
+
+		newData.setResult(resultPrediction.getName());
+		dataTestingKucingService.saveData(newData);
+
+		return newData;
 	}
 
-	private List<DiagnosaKucing> generateData() {
-		List<DiagnosaKucing> dataBayesList = diagnosaKucingService.getDiagnosaKucingAll();
+	private List<DataLatihKucing> generateData() {
+		List<DataLatihKucing> dataBayesList = dataLatihKucingService.getDataLatihKucingAll();
 
 //		dataBayesList.stream().forEach(p -> {
 //			System.out.println(p.toString());
@@ -60,9 +88,9 @@ public class BayesDiagnosaKucingService {
 
 	}
 
-	private List<Attribute> getValueAttrs(List<DiagnosaKucing> dataBayesList) {
+	private List<Attribute> getValueAttrs(List<DataLatihKucing> dataBayesList) {
 		List<Attribute> attrs = new ArrayList<Attribute>();
-		Field[] fields = DiagnosaKucing.class.getDeclaredFields();
+		Field[] fields = DataLatihKucing.class.getDeclaredFields();
 		for (Field field : fields) {
 			List<String> valueAttrs = new ArrayList<>();
 			if (!field.getName().equalsIgnoreCase("id")) {
@@ -104,8 +132,8 @@ public class BayesDiagnosaKucingService {
 		return attrs;
 	}
 
-	private Map<String, Integer> countResults(List<DiagnosaKucing> dataBayesList) {
-		List<DiagnosaKucing> temp = dataBayesList;
+	private Map<String, Integer> countResults(List<DataLatihKucing> dataBayesList) {
+		List<DataLatihKucing> temp = dataBayesList;
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		temp.stream().map(p -> p.getResult()).distinct().forEach(e -> {
 			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString()))
@@ -141,7 +169,7 @@ public class BayesDiagnosaKucingService {
 		return probResults;
 	}
 
-	public static List<MapAttributResult> countAttrs(List<DiagnosaKucing> dataBayesList, List<Attribute> attrs,
+	public static List<MapAttributResult> countAttrs(List<DataLatihKucing> dataBayesList, List<Attribute> attrs,
 			Map<String, Integer> countResults) {
 		List<MapAttributResult> list = new ArrayList<MapAttributResult>();
 		List<String> results = new ArrayList<String>();

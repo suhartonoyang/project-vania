@@ -13,8 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-@Entity(name = "diagnosa_kucing")
-public class DiagnosaKucing implements Serializable {
+@Entity(name = "data_latih_kucing")
+public class DataLatihKucing implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class DiagnosaKucing implements Serializable {
 	private String result;
 
 	/** Default constructor. */
-	public DiagnosaKucing() {
+	public DataLatihKucing() {
 		super();
 	}
 
@@ -215,10 +215,10 @@ public class DiagnosaKucing implements Serializable {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof DiagnosaKucing)) {
+		if (!(other instanceof DataLatihKucing)) {
 			return false;
 		}
-		DiagnosaKucing that = (DiagnosaKucing) other;
+		DataLatihKucing that = (DataLatihKucing) other;
 		if (this.getId() != that.getId()) {
 			return false;
 		}
@@ -233,9 +233,9 @@ public class DiagnosaKucing implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (!(other instanceof DiagnosaKucing))
+		if (!(other instanceof DataLatihKucing))
 			return false;
-		return this.equalKeys(other) && ((DiagnosaKucing) other).equalKeys(this);
+		return this.equalKeys(other) && ((DataLatihKucing) other).equalKeys(this);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class DiagnosaKucing implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DiagnosaKucing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
+		return "DataLatihKucing [id=" + id + ", jenisKelamin=" + jenisKelamin + ", gatalGatal=" + gatalGatal
 				+ ", kulitKemerahan=" + kulitKemerahan + ", buluRontok=" + buluRontok + ", kulitKering=" + kulitKering
 				+ ", bengkak=" + bengkak + ", kropeng=" + kropeng + ", result=" + result + "]";
 	}

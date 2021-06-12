@@ -20,30 +20,11 @@ import com.project.bayes.vania.service.BayesNaiveService;
 @RestController
 @RequestMapping("/api/bayes")
 @CrossOrigin
-public class BayesController {
-
-	@Autowired
-	private BayesDiagnosaAnjingService bayesDiagnosaAnjingService;
-
-	@Autowired
-	private BayesDiagnosaKucingService bayesDiagnosaKucingService;
+public class HelloWorldController {
 
 	@GetMapping("/helloWorld")
 	public String helloWorld() {
 		return "Project Vania Hello World";
 	}
 
-	@PostMapping("/anjing/diagnose")
-	public ResponseEntity<?> dogDiganose(@RequestBody List<Request> requests) {
-		Result result = bayesDiagnosaAnjingService.run(requests);
-
-		return ResponseEntity.ok().body(result);
-	}
-
-	@PostMapping("/run")
-	public ResponseEntity<?> catDiagnose(@RequestBody List<Request> requests) {
-		Result result = bayesDiagnosaKucingService.run(requests);
-
-		return ResponseEntity.ok().body(result);
-	}
 }
