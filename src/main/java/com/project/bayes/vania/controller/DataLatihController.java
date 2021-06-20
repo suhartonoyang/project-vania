@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ public class DataLatihController {
 		resp.setData(data);
 		return ResponseEntity.ok().body(resp);
 	}
-	
+
 	@GetMapping("/data-latih-anjing/{id}")
 	public ResponseEntity<Response> getDataLatihAnjingById(@PathVariable Integer id) {
 		Response resp = new Response();
@@ -54,6 +55,17 @@ public class DataLatihController {
 		resp.setMessage(HttpStatus.OK.name());
 		List<DataLatihAnjing> data = dataLatihAnjingService.getDataLatihAnjingById(id);
 		resp.setData(data);
+		return ResponseEntity.ok().body(resp);
+	}
+
+	@DeleteMapping("/data-latih-anjing/{id}")
+	public ResponseEntity<Response> deleteDataAnjingById(@PathVariable Integer id) {
+		Response resp = new Response();
+		if (dataLatihAnjingService.deleteDataById(id).equals("OK")) {
+			resp.setCode(String.valueOf(HttpStatus.OK.value()));
+			resp.setMessage("Delete Successfully");
+			resp.setData(null);
+		}
 		return ResponseEntity.ok().body(resp);
 	}
 
@@ -76,7 +88,7 @@ public class DataLatihController {
 		resp.setData(data);
 		return ResponseEntity.ok().body(resp);
 	}
-	
+
 	@GetMapping("/data-latih-kucing/{id}")
 	public ResponseEntity<Response> getDataLatihKucingById(@PathVariable Integer id) {
 		Response resp = new Response();
@@ -84,6 +96,17 @@ public class DataLatihController {
 		resp.setMessage(HttpStatus.OK.name());
 		List<DataLatihKucing> data = dataLatihKucingService.getDataLatihKucingById(id);
 		resp.setData(data);
+		return ResponseEntity.ok().body(resp);
+	}
+
+	@DeleteMapping("/data-latih-kucing/{id}")
+	public ResponseEntity<Response> deleteDataLatihKucingById(@PathVariable Integer id) {
+		Response resp = new Response();
+		if (dataLatihKucingService.deleteDataById(id).equals("OK")) {
+			resp.setCode(String.valueOf(HttpStatus.OK.value()));
+			resp.setMessage("Delete Successfully");
+			resp.setData(null);
+		}
 		return ResponseEntity.ok().body(resp);
 	}
 
@@ -96,4 +119,5 @@ public class DataLatihController {
 		resp.setData(Arrays.asList(newData));
 		return ResponseEntity.ok().body(resp);
 	}
+
 }

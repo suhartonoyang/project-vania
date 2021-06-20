@@ -32,4 +32,9 @@ public class DataLatihKucingService {
 	public DataLatihKucing saveData(DataLatihKucing data) {
 		return dataLatihKucingRepository.save(data);
 	}
+	
+	public String deleteDataById(Integer id) {
+		dataLatihKucingRepository.deleteById(id);
+		return "OK";		
+	}
 }

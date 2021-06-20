@@ -30,6 +30,11 @@ public class DataLatihAnjingService {
 	public DataLatihAnjing saveData(DataLatihAnjing data) {
 		return dataLatihAnjingRepository.save(data);
 	}
+	
+	public String deleteDataById(Integer id) {
+		dataLatihAnjingRepository.deleteById(id);
+		return "OK";		
+	}
 
 //	public List<DataLatihAnjing> getDataLatihAnjingByLimit(int limit) {
 //		List<DataLatihAnjing> data = new ArrayList<DataLatihAnjing>();
