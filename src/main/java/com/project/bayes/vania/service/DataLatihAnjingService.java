@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Optional;
 import com.project.bayes.vania.model.DataLatihAnjing;
-import com.project.bayes.vania.model.DataLatihKucing;
 import com.project.bayes.vania.repo.DataLatihAnjingRepository;
 
 @Service
@@ -31,4 +30,14 @@ public class DataLatihAnjingService {
 	public DataLatihAnjing saveData(DataLatihAnjing data) {
 		return dataLatihAnjingRepository.save(data);
 	}
+
+//	public List<DataLatihAnjing> getDataLatihAnjingByLimit(int limit) {
+//		List<DataLatihAnjing> data = new ArrayList<DataLatihAnjing>();
+//		Pageable pageable = PageRequest.of(0, limit, Sort.by("id"));
+//		Page<DataLatihAnjing> page = dataLatihAnjingRepository.findAll(pageable);
+//		page.forEach(p->{
+//			data.add(p);
+//		});
+//		return data;
+//	}
 }
