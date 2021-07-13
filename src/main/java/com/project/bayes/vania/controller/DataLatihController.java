@@ -23,7 +23,6 @@ import com.project.bayes.vania.model.DataLatihAnjing;
 import com.project.bayes.vania.model.DataLatihKucing;
 import com.project.bayes.vania.service.BayesDiagnosaAnjingService;
 import com.project.bayes.vania.service.BayesDiagnosaKucingService;
-import com.project.bayes.vania.service.BayesNaiveService;
 import com.project.bayes.vania.service.DataLatihAnjingService;
 import com.project.bayes.vania.service.DataLatihKucingService;
 

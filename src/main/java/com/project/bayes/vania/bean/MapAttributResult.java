@@ -6,19 +6,28 @@ public class MapAttributResult {
 	private String status;
 	private long count;
 	private double prob;
+	private boolean isSelected;
+	private boolean isZero;
+	private long newCount;
+	private double newProb;
 
 	public MapAttributResult() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MapAttributResult(String nameAttribute, String valueAttriute, String status, long count, double prob) {
+	public MapAttributResult(String nameAttribute, String valueAttriute, String status, long count, double prob, boolean isSelected,
+			boolean isZero, long newCount, double newProb) {
 		super();
 		this.nameAttribute = nameAttribute;
 		this.valueAttriute = valueAttriute;
 		this.status = status;
 		this.count = count;
 		this.prob = prob;
+		this.isSelected = isSelected;
+		this.isZero = isZero;
+		this.newCount = newCount;
+		this.newProb = newProb;
 	}
 
 	public String getNameAttribute() {
@@ -61,10 +70,43 @@ public class MapAttributResult {
 		this.prob = prob;
 	}
 
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+
+	public boolean isZero() {
+		return isZero;
+	}
+
+	public void setZero(boolean isZero) {
+		this.isZero = isZero;
+	}
+
+	public long getNewCount() {
+		return newCount;
+	}
+
+	public void setNewCount(long newCount) {
+		this.newCount = newCount;
+	}
+
+	public double getNewProb() {
+		return newProb;
+	}
+
+	public void setNewProb(double newProb) {
+		this.newProb = newProb;
+	}
+
 	@Override
 	public String toString() {
-		return "MapAttributStatus [nameAttribute=" + nameAttribute + ", valueAttriute=" + valueAttriute + ", status="
-				+ status + ", count=" + count + ", prob=" + prob + "]";
+		return "MapAttributResult [nameAttribute=" + nameAttribute + ", valueAttriute=" + valueAttriute + ", status=" + status + ", count="
+				+ count + ", prob=" + prob + ", isSelected=" + isSelected + ", isZero=" + isZero + ", newCount=" + newCount + ", newProb="
+				+ newProb + "]";
 	}
 
 }

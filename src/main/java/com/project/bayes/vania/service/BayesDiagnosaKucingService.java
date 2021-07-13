@@ -1,30 +1,21 @@
 package com.project.bayes.vania.service;
 
-import java.beans.Introspector;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 import com.project.bayes.vania.bean.Attribute;
-import com.project.bayes.vania.bean.DataSet;
 import com.project.bayes.vania.bean.MapAttributResult;
 import com.project.bayes.vania.bean.Request;
 import com.project.bayes.vania.bean.Result;
-import com.project.bayes.vania.model.DataBayes;
-import com.project.bayes.vania.model.DataLatihAnjing;
 import com.project.bayes.vania.model.DataLatihKucing;
-import com.project.bayes.vania.model.DataTestingAnjing;
 import com.project.bayes.vania.model.DataTestingKucing;
 
 @Service
@@ -36,7 +27,7 @@ public class BayesDiagnosaKucingService {
 	@Autowired
 	private DataTestingKucingService dataTestingKucingService;
 
-	public DataTestingKucing run(List<Request> requests) {
+	public Map<String, Object> run(List<Request> requests) {
 		// TODO code application logic here
 
 		// generate data from database
@@ -74,7 +65,11 @@ public class BayesDiagnosaKucingService {
 		newData.setResult(resultPrediction.getName());
 		dataTestingKucingService.saveData(newData);
 
-		return newData;
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("dataTestingKucing", newData);
+		returnMap.put("resultJourney", resultPrediction.getJourney());
+
+		return returnMap;
 	}
 
 	private List<DataLatihKucing> generateData() {
@@ -136,8 +131,7 @@ public class BayesDiagnosaKucingService {
 		List<DataLatihKucing> temp = dataBayesList;
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		temp.stream().map(p -> p.getResult()).distinct().forEach(e -> {
-			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString()))
-					.collect(Collectors.toList()).size();
+			int hitung = dataBayesList.stream().filter(p -> p.getResult().equals(e.toString())).collect(Collectors.toList()).size();
 			map.put(e, hitung);
 		});
 
@@ -177,8 +171,7 @@ public class BayesDiagnosaKucingService {
 			results.addAll(r);
 		});
 
-		List<Attribute> filterAttr = attrs.stream().filter(p -> !p.getName().equalsIgnoreCase("result"))
-				.collect(Collectors.toList());
+		List<Attribute> filterAttr = attrs.stream().filter(p -> !p.getName().equalsIgnoreCase("result")).collect(Collectors.toList());
 
 		for (Attribute attr : filterAttr) {
 			for (String result : results) {
@@ -187,20 +180,15 @@ public class BayesDiagnosaKucingService {
 					long countAttr = dataBayesList.stream().filter(p -> {
 						switch (attr.getName()) {
 						case "jenisKelamin":
-							return p.getResult().equalsIgnoreCase(result)
-									&& p.getJenisKelamin().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getJenisKelamin().equalsIgnoreCase(attrValue);
 						case "gatalGatal":
-							return p.getResult().equalsIgnoreCase(result)
-									&& p.getGatalGatal().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getGatalGatal().equalsIgnoreCase(attrValue);
 						case "kulitKemerahan":
-							return p.getResult().equalsIgnoreCase(result)
-									&& p.getKulitKemerahan().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getKulitKemerahan().equalsIgnoreCase(attrValue);
 						case "buluRontok":
-							return p.getResult().equalsIgnoreCase(result)
-									&& p.getBuluRontok().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getBuluRontok().equalsIgnoreCase(attrValue);
 						case "kulitKering":
-							return p.getResult().equalsIgnoreCase(result)
-									&& p.getKulitKering().equalsIgnoreCase(attrValue);
+							return p.getResult().equalsIgnoreCase(result) && p.getKulitKering().equalsIgnoreCase(attrValue);
 						case "bengkak":
 							return p.getResult().equalsIgnoreCase(result) && p.getBengkak().equalsIgnoreCase(attrValue);
 						case "kropeng":
@@ -210,8 +198,8 @@ public class BayesDiagnosaKucingService {
 						}
 					}).count();
 					Double probAttr = (double) countAttr / (countResult);
-					MapAttributResult mar = new MapAttributResult(attr.getName(), attrValue, result, countAttr,
-							probAttr);
+					MapAttributResult mar = new MapAttributResult(attr.getName(), attrValue, result, countAttr, probAttr, false, false, 0,
+							0);
 					list.add(mar);
 				}
 			}
@@ -227,13 +215,13 @@ public class BayesDiagnosaKucingService {
 
 	public Result prediction(List<Request> requests, List<Attribute> attrs, List<MapAttributResult> mapAttrs,
 			Map<String, Double> probResults, Map<String, Integer> countResults) {
-		List<String> resultAttrs = new ArrayList();
+		List<String> resultAttrs = new ArrayList<String>();
 
 		attrs.stream().filter(p -> p.getName().equalsIgnoreCase("result")).map(m -> m.getValues()).forEach(q -> {
 			resultAttrs.addAll(q);
 		});
 
-		List<Result> results = new ArrayList();
+		List<Result> results = new ArrayList<Result>();
 		for (String resultAttr : resultAttrs) {
 			double prob = probResults.get(resultAttr);
 //			System.out.println("prob " + resultAttr + ": " + prob);
@@ -245,19 +233,24 @@ public class BayesDiagnosaKucingService {
 								boolean checkZero = requests.stream().filter(p -> {
 									return mapAttrs.stream().filter(q -> {
 										return p.getNameAttribute().equalsIgnoreCase(q.getNameAttribute())
-												&& p.getValueAttribute().equalsIgnoreCase(q.getValueAttriute())
-												&& q.getCount() == 0 && q.getStatus().equalsIgnoreCase(resultAttr);
+												&& p.getValueAttribute().equalsIgnoreCase(q.getValueAttriute()) && q.getCount() == 0
+												&& q.getStatus().equalsIgnoreCase(resultAttr);
 									}).findAny().isPresent();
 								}).findAny().isPresent();
+								mapAttr.setSelected(true);
+//								System.out.println("mapAttr: " + mapAttr);
 //								System.out.println("checkZero: " + checkZero);
 								if (checkZero) {
-//									System.out.println("mapAttr: " + mapAttr.toString());
 									long countAttr = mapAttr.getCount();
 									++countAttr;
-									int sumCountStatus = countResults.values().stream().mapToInt(Integer::intValue)
-											.sum();
+									int sumCountStatus = countResults.values().stream().mapToInt(Integer::intValue).sum();
 									double newProb = (double) countAttr / sumCountStatus;
 									prob *= newProb;
+
+									mapAttr.setZero(true);
+									mapAttr.setNewCount(countAttr);
+									mapAttr.setNewProb(prob);
+
 //									System.out.println("countAttr: " + countAttr + " - sumCountStatus: " + sumCountStatus + " - newProb: " + newProb);
 								} else {
 									prob *= mapAttr.getProb();
@@ -267,7 +260,7 @@ public class BayesDiagnosaKucingService {
 					}
 				}
 			}
-			Result result = new Result(resultAttr, prob);
+			Result result = new Result(resultAttr, prob, null);
 			results.add(result);
 		}
 
@@ -275,12 +268,63 @@ public class BayesDiagnosaKucingService {
 //			System.out.println(p.toString());
 //		});
 
-//		results.stream().forEach(p -> {
-//			System.out.println(p.getName() + ": " + p.getValue());
-//		});
+		results.stream().forEach(p -> {
+			setResultJourney(mapAttrs, results, countResults, probResults);
+		});
 
 		Result max = results.stream().max(Comparator.comparing(Result::getValue)).orElse(null);
 
 		return max;
+	}
+
+	private void setResultJourney(List<MapAttributResult> mapAttrs, List<Result> results, Map<String, Integer> countResults,
+			Map<String, Double> probResults) {
+		int sumCountStatus = countResults.values().stream().mapToInt(Integer::intValue).sum();
+		for (Result r : results) {
+			int countResult = countResults.get(r.getName());
+//			System.out.println("=================" + r.getName() + "=================");
+			String print = null;
+			String printZero = null;
+			String calculation = null;
+			String calculationZero = null;
+			String prob = "(" + countResult + "/" + sumCountStatus + ") = " + r.getValue();
+			for (MapAttributResult q : mapAttrs) {
+				if (q.isSelected() && q.getStatus().equalsIgnoreCase(r.getName())) {
+					String attr = q.getNameAttribute();
+					String calcProb = "(" + q.getCount() + "/" + countResult + ") = " + q.getProb();
+					print = (print == null) ? attr + "-" + calcProb : print + ", " + attr + "-" + calcProb;
+					calculation = (calculation == null)
+							? prob.substring(0, prob.lastIndexOf('=')).trim() + " x " + calcProb.substring(0, calcProb.lastIndexOf('=')).trim()
+							: calculation + " x " + calcProb.substring(0, calcProb.lastIndexOf('=')).trim();
+					if (q.isZero()) {
+						String calcProbZero = "(" + q.getNewCount() + "/" + sumCountStatus + ") = " + q.getNewProb();
+						printZero = (printZero == null) ? attr + "-" + calcProbZero : printZero + ", " + attr + "-" + calcProbZero;
+						calculationZero = (calculationZero == null)
+								? prob.substring(0, prob.lastIndexOf('=')).trim() + " x "
+										+ calcProbZero.substring(0, calcProbZero.lastIndexOf('=')).trim()
+								: calculationZero + " x " + calcProbZero.substring(0, calcProbZero.lastIndexOf('=')).trim();
+					}
+				}
+			}
+
+//			System.out.println("Prob Value: " + prob);
+//			System.out.println("Origin Journey: " + print);
+//			System.out.println("Origin Journey Calculation: " + calculation);
+//			System.out.println("Journey because of Laplace Correction: " + printZero);
+//			System.out.println("Journey Calculation because of Laplace Correction: " + calculationZero);
+
+			String journey = "=================" + r.getName() + "=================\n";
+			journey += "Prob Value: " + prob + "\n";
+			journey += "Origin Journey: " + print + "\n";
+			journey += "Origin Journey Calculation: " + calculation;
+			if (printZero != null) {
+				journey += "\n";
+				journey += "Journey because of Laplace Correction: " + printZero + "\n";
+				journey += "Journey Calculation because of Laplace Correction: " + calculationZero;
+			}
+			r.setJourney(journey);
+
+//			System.out.println(journey);
+		}
 	}
 }
