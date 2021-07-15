@@ -296,7 +296,7 @@ public class BayesDiagnosaAnjingService {
 			String printZero = null;
 			String calculation = null;
 			String calculationZero = null;
-			String prob = "(" + countResult + "/" + sumCountStatus + ") = " + r.getValue();
+			String prob = "(" + countResult + "/" + sumCountStatus + ") = " + probResults.get(r.getName());
 			for (MapAttributResult q : mapAttrs) {
 				if (q.isSelected() && q.getStatus().equalsIgnoreCase(r.getName())) {
 					String attr = q.getNameAttribute();
