@@ -15,12 +15,20 @@ public class DataTestingAnjingService {
 	@Autowired
 	private DataTestingAnjingRepository dataTestingAnjingRepository;
 
-	public List<DataTestingAnjing> getDataTestingAnjingAll() {
+	public List<DataTestingAnjing> getDataAll() {
 		return StreamSupport.stream(dataTestingAnjingRepository.findAll().spliterator(), false)
 				.collect(Collectors.toList());
 	}
 
 	public DataTestingAnjing saveData(DataTestingAnjing data) {
 		return dataTestingAnjingRepository.save(data);
+	}
+	
+	public DataTestingAnjing getDataById(Integer id) {
+		return dataTestingAnjingRepository.findById(id).orElse(null);
+	}
+	
+	public void deleteData(Integer id) {
+		dataTestingAnjingRepository.deleteById(id);
 	}
 }

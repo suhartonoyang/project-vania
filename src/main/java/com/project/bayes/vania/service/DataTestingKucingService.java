@@ -15,12 +15,20 @@ public class DataTestingKucingService {
 	@Autowired
 	private DataTestingKucingRepository dataTestingKucingRepository;
 
-	public List<DataTestingKucing> getDataTestingAnjingAll() {
+	public List<DataTestingKucing> getDataAll() {
 		return StreamSupport.stream(dataTestingKucingRepository.findAll().spliterator(), false)
 				.collect(Collectors.toList());
 	}
 
 	public DataTestingKucing saveData(DataTestingKucing data) {
 		return dataTestingKucingRepository.save(data);
+	}
+	
+	public DataTestingKucing getDataById(Integer id) {
+		return dataTestingKucingRepository.findById(id).orElse(null);
+	}
+	
+	public void deleteData(Integer id) {
+		dataTestingKucingRepository.deleteById(id);
 	}
 }
